@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Surat Pindah Siswa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .nav-tab.active {
+            color: #4CAF50;
+            background: white;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #4CAF50;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section h3 {
+            color: #4CAF50;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #4CAF50;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-upload-wrapper {
+            border: 3px dashed #4CAF50;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-upload-wrapper:hover {
+            background: rgba(76, 175, 80, 0.05);
+            border-color: #45a049;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+
+        .file-upload-text {
+            font-size: 16px;
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        .file-upload-hint {
+            font-size: 13px;
+            color: #6c757d;
+            margin-top: 8px;
+        }
+
+        .file-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-info strong {
+            color: #2e7d32;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-left: 4px solid #dc3545;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .table-header h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .search-box {
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 15px;
+            min-width: 250px;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-masuk {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-keluar {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .pdf-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .pdf-link:hover {
+            color: #45a049;
+            text-decoration: underline;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏫 Aplikasi Surat Pindah Siswa</h1>
+            <p>Sistem Pengelolaan Surat Pindah Sekolah</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('entry', this)">📥 Input Surat</button>
+            <button class="nav-tab" onclick="switchTab('view', this)">📊 Data Surat</button>
+        </div>
+
+        <div id="entry" class="tab-content active">
+            <div id="successAlert" class="alert alert-success"></div>
+            <div id="errorAlert" class="alert alert-danger"></div>
+
+            <form id="suratForm">
+                <div class="form-section">
+                    <h3>📝 Data Surat Pindah</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="jenisSurat">Jenis Surat *</label>
+                            <select id="jenisSurat" name="jenisSurat" required>
+                                <option value="">Pilih Jenis Surat</option>
+                                <option value="Masuk">Surat Pindah Masuk</option>
+                                <option value="Keluar">Surat Pindah Keluar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggalSurat">Tanggal Surat *</label>
+                            <input type="date" id="tanggalSurat" name="tanggalSurat" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nisn">NISN Siswa *</label>
+                            <input type="text" id="nisn" name="nisn" placeholder="10 digit NISN" maxlength="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="namaSiswa">Nama Siswa</label>
+                            <input type="text" id="namaSiswa" name="namaSiswa" placeholder="Nama lengkap siswa">
+                        </div>
+                        <div class="form-group">
+                            <label for="asalSekolah">Asal Sekolah *</label>
+                            <input type="text" id="asalSekolah" name="asalSekolah" placeholder="Nama sekolah asal" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sekolahTujuan">Sekolah Tujuan *</label>
+                            <input type="text" id="sekolahTujuan" name="sekolahTujuan" placeholder="Nama sekolah tujuan" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📎 Upload File PDF</h3>
+                    <div class="form-group full-width">
+                        <label>File PDF Surat Pindah</label>
+                        <div class="file-upload-wrapper" id="fileUploadWrapper">
+                            <input type="file" id="filePdf" name="filePdf" accept=".pdf">
+                            <div class="file-upload-icon">📄</div>
+                            <div class="file-upload-text">Klik atau drag file PDF di sini</div>
+                            <div class="file-upload-hint">Format: PDF | Maksimal: 10 MB</div>
+                        </div>
+                        <div class="file-info" id="fileInfo"></div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="keterangan">Keterangan</label>
+                        <textarea id="keterangan" name="keterangan" placeholder="Keterangan tambahan (opsional)"></textarea>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button type="submit" class="btn" id="submitBtn">💾 Simpan Data</button>
+                </div>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Menyimpan data...</p>
+            </div>
+        </div>
+
+        <div id="view" class="tab-content">
+            <div class="data-table">
+                <div class="table-header">
+                    <h3>📊 Data Surat Pindah Siswa</h3>
+                    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Cari data...">
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Jenis</th>
+                                <th>Tanggal</th>
+                                <th>NISN</th>
+                                <th>Nama Siswa</th>
+                                <th>Asal Sekolah</th>
+                                <th>Sekolah Tujuan</th>
+                                <th>File PDF</th>
+                                <th>Waktu Input</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="9" class="empty-state">
+                                    <div class="empty-state-icon">⏳</div>
+                                    <div>Memuat data...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypVphnuMwXdJH-Lf1RFGkej6aYO5Y6eu_IplwHj3oP8E_mOYVSRGzcw2rQvBq9qZn3/exec';
+        
+        document.getElementById('tanggalSurat').value = new Date().toISOString().split('T')[0];
+
+        const fileInput = document.getElementById('filePdf');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileUploadWrapper = document.getElementById('fileUploadWrapper');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                
+                fileInfo.innerHTML = `
+                    <strong>File terpilih:</strong> ${file.name}<br>
+                    <strong>Ukuran:</strong> ${fileSize} MB<br>
+                    <strong>Tipe:</strong> ${file.type}
+                `;
+                fileInfo.classList.add('show');
+                fileUploadWrapper.style.borderColor = '#45a049';
+            } else {
+                fileInfo.classList.remove('show');
+                fileUploadWrapper.style.borderColor = '#4CAF50';
+            }
+        });
+
+        fileUploadWrapper.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.background = 'rgba(76, 175, 80, 0.1)';
+            this.style.borderColor = '#45a049';
+        });
+
+        fileUploadWrapper.addEventListener('dragleave', function() {
+            this.style.background = 'white';
+            this.style.borderColor = '#4CAF50';
+        });
+
+        fileUploadWrapper.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.background = 'white';
+            this.style.borderColor = '#4CAF50';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        });
+
+        document.getElementById('nisn').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+
+        document.getElementById('searchBox').addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+
+        function switchTab(tabName, button) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            button.classList.add('active');
+            
+            if (tabName === 'view') {
+                loadData();
+            }
+        }
+
+        function showAlert(type, message) {
+            const alert = document.getElementById(type + 'Alert');
+            alert.textContent = message;
+            alert.classList.add('show');
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        document.getElementById('suratForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            
+            submitBtn.disabled = true;
+            loading.classList.add('show');
+            
+            try {
+                const formData = new FormData();
+                
+                for (let element of this.elements) {
+                    if (element.name && element.type !== 'file') {
+                        formData.append(element.name, element.value);
+                    }
+                }
+                
+                if (fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+                    
+                    const base64Data = await new Promise((resolve) => {
+                        reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+                        reader.readAsDataURL(file);
+                    });
+                    
+                    formData.append('fileData', base64Data);
+                    formData.append('fileName', file.name);
+                    formData.append('fileType', file.type);
+                }
+                
+                formData.append('timestamp', new Date().toISOString());
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.text();
+                
+                if (result.includes('success') || result.includes('Success')) {
+                    showAlert('success', '✅ Data berhasil disimpan!');
+                    this.reset();
+                    fileInfo.classList.remove('show');
+                    fileUploadWrapper.style.borderColor = '#4CAF50';
+                    document.getElementById('tanggalSurat').value = new Date().toISOString().split('T')[0];
+                } else {
+                    throw new Error(result);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', '❌ Gagal menyimpan data: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                loading.classList.remove('show');
+            }
+        });
+
+        async function loadData() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getData');
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('tableBody');
+                
+                if (data && data.length > 0) {
+                    tableBody.innerHTML = data.map((row, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td><span class="status-badge status-${row.jenisSurat.toLowerCase()}">${row.jenisSurat}</span></td>
+                            <td>${formatDate(row.tanggalSurat)}</td>
+                            <td>${row.nisn}</td>
+                            <td>${row.namaSiswa || '-'}</td>
+                            <td>${row.asalSekolah}</td>
+                            <td>${row.sekolahTujuan}</td>
+                            <td>${row.fileUrl ? `<a href="${row.fileUrl}" target="_blank" class="pdf-link">📄 Lihat PDF</a>` : '-'}</td>
+                            <td>${formatDateTime(row.timestamp)}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <div>Belum ada data</div>
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('tableBody').innerHTML = `
+                    <tr>
+                        <td colspan="9" class="empty-state">
+                            <div class="empty-state-icon">❌</div>
+                            <div>Error memuat data</div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            return new Date(dateString).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
+        function formatDateTime(dateString) {
+            if (!dateString) return '-';
+            return new Date(dateString).toLocaleString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
