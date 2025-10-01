@@ -3,25 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Utama - SD Negeri 33 Pontianak Utara</title>
+    <title>SD Negeri 33 Pontianak Utara</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, #3b82f6, #2563eb, #1d4ed8, #1e40af);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        .menu-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .menu-card:hover::before {
+            left: 100%;
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .menu-card:active {
+            transform: translateY(-4px);
+        }
+        
+        .icon-wrapper {
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-card:hover .icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .logout-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto p-4">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-600">SD Negeri 33 Pontianak Utara</h1>
-            <p class="text-lg text-gray-600">Sistem Manajemen Sekolah Digital</p>
-        </header>
-
-        <nav class="flex justify-center space-x-4">
-            <a href="suratmasukkeluar.html" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-                📚 Arsip Surat Masuk Keluar
-            </a>
-			<a href="pindahmasukkeluar.html" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-                📚 Arsip Surat Pindah Siswa Masuk Keluar
-            </a>
-			
-        </nav>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header dengan Gradient -->
+    <div class="gradient-bg text-white py-8 px-4 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 animate-fade-in-up">
+                SD Negeri 33 Pontianak Utara
+            </h1>
+            <p class="text-base md:text-lg lg:text-xl opacity-90 animate-fade-in-up" style="animation-delay: 0.2s">
+                Sistem Manajemen Arsip Sekolah Digital
+            </p>
+        </div>
     </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <!-- Grid Menu Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+            <!-- Card 1: Aplikasi Penjurnalan -->
+            <a href="suratmasukkeluar.html" class="menu-card bg-white rounded-xl p-6 shadow-md hover:shadow-xl block animate-fade-in-up" style="animation-delay: 0.1s">
+                <div class="icon-wrapper text-4xl md:text-5xl mb-4">📚</div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2">Aplikasi Penjurnalan</h3>
+                <p class="text-sm md:text-base text-gray-600">Kelola jurnal pembelajaran dan aktivitas guru</p>
+                <div class="mt-4 text-blue-600 font-semibold flex items-center">
+                    <span class="mr-2">Buka</span>
+                    <span>→</span>
+                </div>
+            </a>
+
+            <!-- Card 2: Surat Pindah Siswa -->
+            <a href="pindahmasukkeluar.html" class="menu-card bg-white rounded-xl p-6 shadow-md hover:shadow-xl block animate-fade-in-up" style="animation-delay: 0.2s">
+                <div class="icon-wrapper text-4xl md:text-5xl mb-4">📝</div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2">Surat Pindah Siswa</h3>
+                <p class="text-sm md:text-base text-gray-600">Kelola surat pindah siswa masuk dan keluar</p>
+                <div class="mt-4 text-blue-600 font-semibold flex items-center">
+                    <span class="mr-2">Buka</span>
+                    <span>→</span>
+                </div>
+            </a>
+
+            
+        <!-- Footer Info -->
+        <div class="mt-12 text-center text-gray-500 text-sm animate-fade-in-up" style="animation-delay: 0.8s">
+            <p>© 2025 SD Negeri 33 Pontianak Utara</p>
+            <p class="mt-1">Sistem Manajemen Sekolah Digital</p>
+        </div>
+    </div>
+
+    <script>
+        // Add ripple effect on click
+        document.querySelectorAll('.menu-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const ripple = document.createElement('div');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple-effect 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+        
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple-effect {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
